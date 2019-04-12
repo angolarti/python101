@@ -11,6 +11,7 @@ Os dados dessas instancias serão usados para fazer as estatísticas
 
 class Entrevista(object):
     """ Classe Entrevista """
+
     def __init__(self, nome="", idade=0, ano=0):
         """
         Entra com os valores iniciais. variáveis de sistema.

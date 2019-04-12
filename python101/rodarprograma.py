@@ -13,7 +13,7 @@ import statistics
 
 import sh
 
-import meuprograma
+from python101 import meuprograma
 
 
 def carrega_dados():
@@ -173,7 +173,9 @@ def calcular_dados():
         sh.subl3('dados.json')
 
 
-carrega_dados()
-novos_dados()
-salvar_dados()
-calcular_dados()
+def main():
+    carrega_dados()
+    novos_dados()
+    salvar_dados()
+    calcular_dados()
+

@@ -1,1 +1,1 @@
-print("Improtação em andamento")
+from python101 import meuprograma, rodarprograma
