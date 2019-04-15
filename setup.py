@@ -28,7 +28,7 @@ setup(
     # 21.04         date based release
     # 23            Serial release
 
-    version='1.0.0',
+    version='1.0.2',
 
     description='Exemplo para o Python 101',
     long_description=long_description,

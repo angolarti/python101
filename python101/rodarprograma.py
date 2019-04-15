@@ -16,6 +16,9 @@ import sh
 from python101 import meuprograma
 
 
+entrevistados = []
+
+
 def carrega_dados():
     """
     Carrega as informações do arquvo JSON
@@ -43,7 +46,7 @@ def carrega_dados():
 
     # Ler o arquivo JSON
     try:
-        with open('dados.json', 'r') as file:
+        with open('data/dados.json', 'r') as file:
             dados = json.load(file)
             entrevistas = dados['Entrevistas']
             entrevistados = [get_dados(entrevista)
@@ -103,7 +106,7 @@ def salvar_dados():
     salvar_entrevistado = json.dumps(
         salvar_entrevistado, indent=4, sort_keys=False)
     try:
-        with open('dados.json', 'w') as file:
+        with open('data/dados.json', 'w') as file:
             file.write(salvar_entrevistado)
     except Exception as erro:
         print('Ocorreu um erro salvar a lista')
@@ -134,43 +137,46 @@ def calcular_dados():
 
     # Lista por Cmpreensão
     # lista = [<epressão para valor> <loop> <expressão para loop>]
-    menor_idade = min([entrevistado.idade for entrevistado in entrevistados])
-    maior_idade = max([entrevistado.idade for entrevistado in entrevistados])
+    try:
+        menor_idade = min([entrevistado.idade for entrevistado in entrevistados])
+        maior_idade = max([entrevistado.idade for entrevistado in entrevistados])
 
-    media_idade_dos_adultos = statistics.median_high(
-        [entrevistado.idade for entrevistado in entrevistados if entrevistado.idade >= 18])
+        media_idade_dos_adultos = statistics.median_high(
+            [entrevistado.idade for entrevistado in entrevistados if entrevistado.idade >= 18])
 
-    decadas = [int(entrevistado.ano_de_nascimento / 10)
-               * 10 for entrevistado in entrevistados]
-    set_decadas = set(decadas)
+        decadas = [int(entrevistado.ano_de_nascimento / 10)
+                   * 10 for entrevistado in entrevistados]
+        set_decadas = set(decadas)
+    except ValueError:
+        print('Database empty')
+    else:
+        # Dicionário pro Compreensão
+        # dicionario ) {<expressão para chave>:<expressão para valor> <loop> <expressão para lopp>}
+        entrevistados_por_decadas = {
+            decada: decadas.count(decada) for decada in set_decadas}
 
-    # Dicionário pro Compreensão
-    # dicionario ) {<expressão para chave>:<expressão para valor> <loop> <expressão para lopp>}
-    entrevistados_por_decadas = {
-        decada: decadas.count(decada) for decada in set_decadas}
+        print('\nResultados:')
+        print('--------------------------------')
+        print('Quantidade de Entrevistas: {}'.format(len(entrevistados)))
+        print('Menor idade: {}'.format(menor_idade))
+        print('Maior idade: {}'.format(maior_idade))
+        print('Ḿédia de idade dos adultos: {}'.format(media_idade_dos_adultos))
+        print('\nNascimentos por Décadas')
+        print('--------------------------------')
+        for decada, quantidade in entrevistados_por_decadas.items():
+            print('{}: {} nascimentos'.format(decada, quantidade))
+        print('\n\n')
 
-    print('\nResultados:')
-    print('--------------------------------')
-    print('Quantidade de Entrevistas: {}'.format(len(entrevistados)))
-    print('Menor idade: {}'.format(menor_idade))
-    print('Maior idade: {}'.format(maior_idade))
-    print('Ḿédia de idade dos adultos: {}'.format(media_idade_dos_adultos))
-    print('\nNascimentos por Décadas')
-    print('--------------------------------')
-    for decada, quantidade in entrevistados_por_decadas.items():
-        print('{}: {} nascimentos'.format(decada, quantidade))
-    print('\n\n')
+        resposta_ok = False
 
-    resposta_ok = False
+        while not resposta_ok:
+            resposta = input('Deseja mostar os dados um arquivo? (s/n) ')
+            resposta = resposta[0].lower()
+            if resposta == 's' or resposta == 'n':
+                resposta_ok = True
 
-    while not resposta_ok:
-        resposta = input('Deseja mostar os dados um arquivo? (s/n) ')
-        resposta = resposta[0].lower()
-        if resposta == 's' or resposta == 'n':
-            resposta_ok = True
-
-    if resposta_ok:
-        sh.subl3('dados.json')
+        if resposta == 's':
+            sh.subl3('data/dados.json')
 
 
 def main():
